@@ -12,63 +12,51 @@ class Song
     self.class.all << self
   end
 
-  def Song.create
-    song = Song.new
+  def self.create
+    song = self.new
     self.all << song
     song
   end
 
-  def Song.new_by_name(name)
-    song = Song.new
+  def self.new_by_name(name)
+    song = self.new
     song.name = name
     song
   end
 
-  def Song.create_by_name(name)
-    song = Song.new
-    song.name = name
+  def self.create_by_name(name)
+    song = self.new_by_name(name)
     self.all << song
     song
   end
 
-  def Song.find_by_name(name)
+  def self.find_by_name(name)
     self.all.detect {|song| song.name == name}
   end
 
-  def Song.find_or_create_by_name(name)
-    if Song.find_by_name(name)
-      Song.find_by_name(name)
-    else
-      Song.create_by_name(name)
-    end
+  def self.find_or_create_by_name(name)
+  self.find_by_name(name) || self.create_by_name(name)
   end
 
-  def Song.alphabetical
+  def self.alphabetical
     self.all.sort_by {|song| song.name}
   end
 
-  def Song.new_from_filename(file_name)
-    artist_and_name = file_name.split(' - ')
-    artist_name = artist_and_name[0]
-    song_name = artist_and_name[1].chomp('.mp3')
-    song = Song.new
-    song.name = song_name
-    song.artist_name = artist_name
-    self.all << song
+  def self.new_from_filename(file)
+    song_data = file.split(" - ")
+    artist = song_data[0]
+    song_name = song_data[1].chomp(".mp3")
+    song = self.new_by_name(song_name)
+    song.artist_name = artist
     song
   end
 
-  def Song.create_from_filename(file_name)
-    self.new_from_filename(file_name)
+  def self.create_from_filename(file)
+    song = self.new_from_filename(file)
+    self.all << song
   end
 
-  def Song.destroy_all
+  def self.destroy_all
     self.all.clear
   end
-
-
-
-
-
-
 end
